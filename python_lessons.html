@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Python Basics for Civil Engineers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony Neutrals -->
+    <!-- Application Structure Plan: A two-column layout with a sticky left-hand navigation for topics (1-6) and a main content area. This structure is intuitive for educational content, allowing users to easily navigate between modules. The key interaction is the "Run Code" feature for each code block, which simulates Python execution in the browser using JavaScript. This provides immediate feedback, transforming passive reading into active learning. A bar chart is included in the NumPy section to visually demonstrate a key application of Python in engineering, as mentioned in the source material's introduction. -->
+    <!-- Visualization & Content Choices: The primary "visualization" is the interactive code execution environment. For the NumPy section, a Chart.js bar chart is used to visualize the `loads_kN` array. Goal: Compare data magnitudes. Method: Bar Chart (Canvas). Interaction: Renders on section view. Justification: This provides a tangible example of Python's visualization capabilities, making the learning more concrete and motivating for engineering students. All other content is presented as structured text with interactive code blocks to support the educational flow. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF6;
+            color: #3C3C3B;
+        }
+        .fira-code {
+            font-family: 'Fira Code', monospace;
+        }
+        .nav-link {
+            transition: all 0.2s ease-in-out;
+        }
+        .nav-link.active {
+            background-color: #E3DACE;
+            color: #005F73;
+            font-weight: 500;
+        }
+        .code-block {
+            background-color: #F0EFEA;
+            border: 1px solid #E3DACE;
+        }
+        .run-button {
+            background-color: #005F73;
+            color: #FFFFFF;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .run-button:hover {
+            background-color: #0A9396;
+        }
+        .code-output {
+            background-color: #282c34;
+            color: #dcdfe4;
+            border-top: 1px solid #4a4a4a;
+            min-height: 2rem;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <aside class="w-full md:w-64 bg-[#ECE7DB] p-4 md:sticky md:top-0 md:h-screen border-r border-gray-200">
+            <h1 class="text-xl font-bold text-[#005F73] mb-4">Python for CE</h1>
+            <nav id="navigation" class="flex flex-row md:flex-col overflow-x-auto md:overflow-x-visible pb-2 md:pb-0">
+                <a href="#overview" class="nav-link active text-sm whitespace-nowrap p-2 rounded-md mb-0 md:mb-1 mr-1 md:mr-0">Module Overview</a>
+                <a href="#topic-1" class="nav-link text-sm whitespace-nowrap p-2 rounded-md mb-0 md:mb-1 mr-1 md:mr-0">1: Intro to Python</a>
+                <a href="#topic-2" class="nav-link text-sm whitespace-nowrap p-2 rounded-md mb-0 md:mb-1 mr-1 md:mr-0">2: Data Structures</a>
+                <a href="#topic-3" class="nav-link text-sm whitespace-nowrap p-2 rounded-md mb-0 md:mb-1 mr-1 md:mr-0">3: Control Flow</a>
+                <a href="#topic-4" class="nav-link text-sm whitespace-nowrap p-2 rounded-md mb-0 md:mb-1 mr-1 md:mr-0">4: Functions</a>
+                <a href="#topic-5" class="nav-link text-sm whitespace-nowrap p-2 rounded-md mb-0 md:mb-1 mr-1 md:mr-0">5: File I/O</a>
+                <a href="#topic-6" class="nav-link text-sm whitespace-nowrap p-2 rounded-md mb-0 md:mb-1 mr-1 md:mr-0">6: Numerical Libraries</a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-6 md:p-10">
+            <div id="content-container">
+                <section id="overview" class="content-section space-y-4">
+                    <h2 class="text-3xl font-bold text-[#005F73]">Python Programming Basics for Civil Engineering Students</h2>
+                    <p class="text-lg">This interactive module introduces senior civil engineering students to the fundamentals of Python programming. Python's versatility, extensive libraries, and readability make it an invaluable tool for civil engineers, enabling automation, data analysis, numerical modeling, and visualization.</p>
+                    <div class="bg-white/50 p-4 rounded-lg border border-gray-200">
+                        <h3 class="text-xl font-semibold mb-2">Learning Objectives</h3>
+                        <ul class="list-none space-y-2">
+                            <li class="flex items-start"><span class="text-green-600 mr-2">✓</span> Understand the basic syntax and structure of Python programs.</li>
+                            <li class="flex items-start"><span class="text-green-600 mr-2">✓</span> Work with fundamental data types and data structures.</li>
+                            <li class="flex items-start"><span class="text-green-600 mr-2">✓</span> Implement control flow statements for decision-making and repetition.</li>
+                            <li class="flex items-start"><span class="text-green-600 mr-2">✓</span> Create and utilize functions for modular and reusable code.</li>
+                            <li class="flex items-start"><span class="text-green-600 mr-2">✓</span> Perform basic file input/output operations.</li>
+                            <li class="flex items-start"><span class="text-green-600 mr-2">✓</span> Get an introduction to powerful numerical libraries like NumPy and Pandas.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="topic-1" class="content-section space-y-4 hidden">
+                    <h2 class="text-2xl font-bold text-[#005F73]">Topic 1: Introduction to Python</h2>
+                    <p>This section covers the absolute basics: what Python is, why it's useful for civil engineers, and the fundamental syntax for variables, data types, and comments. Each code block below is interactive - press the 'Run Code' button to see the output.</p>
+                    
+                    <h3 class="text-xl font-semibold">Basic Syntax: Comments, Variables, and Data Types</h3>
+                    <div class="code-container">
+                        <div class="code-block p-4 rounded-t-lg fira-code text-sm">
+                            <pre><code class="language-python"># Assigning values to variables
+project_name = "Bridge Design Project"  # String
+span_length_m = 120.5                  # Float
+num_piers = 3                          # Integer
+is_approved = True                     # Boolean
+
+# You can reassign variables
+span_length_m = 125.0
+
+print(f"Project: {project_name}")
+print(f"Final Span (m): {span_length_m}")
+print(f"Is Approved: {is_approved}")</code></pre>
+                        </div>
+                        <button class="run-button w-full p-2 rounded-b-lg font-semibold flex items-center justify-center">▶ Run Code</button>
+                        <div class="code-output fira-code p-4 rounded-b-lg mt-[-8px] hidden text-sm"></div>
+                    </div>
+
+                    <h3 class="text-xl font-semibold">Checking Data Types</h3>
+                    <div class="code-container">
+                        <div class="code-block p-4 rounded-t-lg fira-code text-sm">
+                            <pre><code class="language-python">age = 30
+temperature = 25.7
+material = "Concrete"
+is_safe = True
+
+# Check the type of a variable using type()
+print(f"Type of 'age': {type(age)}")
+print(f"Type of 'temperature': {type(temperature)}")
+print(f"Type of 'material': {type(material)}")
+print(f"Type of 'is_safe': {type(is_safe)}")</code></pre>
+                        </div>
+                        <button class="run-button w-full p-2 rounded-b-lg font-semibold flex items-center justify-center">▶ Run Code</button>
+                        <div class="code-output fira-code p-4 rounded-b-lg mt-[-8px] hidden text-sm"></div>
+                    </div>
+                </section>
+
+                <section id="topic-2" class="content-section space-y-4 hidden">
+                    <h2 class="text-2xl font-bold text-[#005F73]">Topic 2: Basic Data Structures</h2>
+                    <p>Python provides powerful built-in data structures to organize and store collections of data. This topic introduces Lists (ordered, changeable), Tuples (ordered, unchangeable), Dictionaries (key-value pairs), and Sets (unique items).</p>
+
+                    <h3 class="text-xl font-semibold">Lists</h3>
+                    <div class="code-container">
+                        <div class="code-block p-4 rounded-t-lg fira-code text-sm">
+                            <pre><code class="language-python"># List of material strengths (MPa)
+concrete_strengths = [25, 30, 35, 40]
+print(f"Initial strengths: {concrete_strengths}")
+
+# Accessing the first element (index 0)
+print(f"First strength: {concrete_strengths[0]} MPa")
+
+# Modifying an element
+concrete_strengths[1] = 32
+print(f"Modified strengths: {concrete_strengths}")
+
+# Adding an element to the end
+concrete_strengths.append(45)
+print(f"After append: {concrete_strengths}")
+
+# Length of the list
+print(f"Number of strengths: {len(concrete_strengths)}")</code></pre>
+                        </div>
+                        <button class="run-button w-full p-2 rounded-b-lg font-semibold flex items-center justify-center">▶ Run Code</button>
+                        <div class="code-output fira-code p-4 rounded-b-lg mt-[-8px] hidden text-sm"></div>
+                    </div>
+
+                    <h3 class="text-xl font-semibold">Dictionaries</h3>
+                    <div class="code-container">
+                        <div class="code-block p-4 rounded-t-lg fira-code text-sm">
+                            <pre><code class="language-python"># Properties of a structural member
+beam_properties = {
+    "material": "Steel",
+    "section_type": "I-beam",
+    "depth_mm": 500,
+}
+print(f"Beam material: {beam_properties['material']}")
+print(f"Beam depth: {beam_properties.get('depth_mm')} mm")
+
+# Adding a new key-value pair
+beam_properties["length_m"] = 10.0
+print(f"All keys: {list(beam_properties.keys())}")
+print(f"All values: {list(beam_properties.values())}")</code></pre>
+                        </div>
+                        <button class="run-button w-full p-2 rounded-b-lg font-semibold flex items-center justify-center">▶ Run Code</button>
+                        <div class="code-output fira-code p-4 rounded-b-lg mt-[-8px] hidden text-sm"></div>
+                    </div>
+                </section>
+                
+                <section id="topic-3" class="content-section space-y-4 hidden">
+                    <h2 class="text-2xl font-bold text-[#005F73]">Topic 3: Control Flow</h2>
+                    <p>Control flow statements determine the order in which instructions are executed. This includes conditional statements (if/elif/else) for decision-making and loops (for, while) for repeating actions.</p>
+
+                    <h3 class="text-xl font-semibold">Conditional Statements (if/elif/else)</h3>
+                     <div class="code-container">
+                        <div class="code-block p-4 rounded-t-lg fira-code text-sm">
+                            <pre><code class="language-python"># Check if a concrete strength meets the requirement
+required_strength = 30 # MPa
+actual_strength = 32   # MPa
+
+if actual_strength >= required_strength:
+    print(f"Strength {actual_strength} MPa is OK.")
+elif actual_strength >= required_strength * 0.9:
+    print(f"Strength {actual_strength} MPa is slightly low.")
+else:
+    print(f"Strength {actual_strength} MPa is too low.")</code></pre>
+                        </div>
+                        <button class="run-button w-full p-2 rounded-b-lg font-semibold flex items-center justify-center">▶ Run Code</button>
+                        <div class="code-output fira-code p-4 rounded-b-lg mt-[-8px] hidden text-sm"></div>
+                    </div>
+
+                    <h3 class="text-xl font-semibold">`for` Loop</h3>
+                     <div class="code-container">
+                        <div class="code-block p-4 rounded-t-lg fira-code text-sm">
+                            <pre><code class="language-python"># Iterate through a list of beam loads
+beam_loads_kN = [50, 75, 120, 90]
+safety_factor = 1.2
+
+print("Calculating factored loads:")
+for load in beam_loads_kN:
+    factored_load = load * safety_factor
+    # .2f formats the float to 2 decimal places
+    print(f"  - Original: {load} kN, Factored: {factored_load:.2f} kN")</code></pre>
+                        </div>
+                        <button class="run-button w-full p-2 rounded-b-lg font-semibold flex items-center justify-center">▶ Run Code</button>
+                        <div class="code-output fira-code p-4 rounded-b-lg mt-[-8px] hidden text-sm"></div>
+                    </div>
+                </section>
+
+                <section id="topic-4" class="content-section space-y-4 hidden">
+                    <h2 class="text-2xl font-bold text-[#005F73]">Topic 4: Functions</h2>
+                    <p>Functions are blocks of reusable code that perform a specific action. They are essential for writing clean, organized, and efficient programs.</p>
+
+                    <h3 class="text-xl font-semibold">Defining and Calling a Function</h3>
+                    <div class="code-container">
+                        <div class="code-block p-4 rounded-t-lg fira-code text-sm">
+                            <pre><code class="language-python"># Function to calculate the area of a rectangular slab
+def calculate_rectangle_area(length, width):
+    area = length * width
+    return area
+
+# Call the function
+slab_area = calculate_rectangle_area(5.0, 3.5)
+print(f"Slab area: {slab_area:.2f} m²")
+
+footing_area = calculate_rectangle_area(2.2, 1.8)
+print(f"Footing area: {footing_area:.2f} m²")</code></pre>
+                        </div>
+                        <button class="run-button w-full p-2 rounded-b-lg font-semibold flex items-center justify-center">▶ Run Code</button>
+                        <div class="code-output fira-code p-4 rounded-b-lg mt-[-8px] hidden text-sm"></div>
+                    </div>
+                </section>
+
+                <section id="topic-5" class="content-section space-y-4 hidden">
+                    <h2 class="text-2xl font-bold text-[#005F73]">Topic 5: File I/O</h2>
+                    <p>File Input/Output (I/O) allows your Python programs to read data from and write results to external files. This is crucial for handling data from surveys, sensors, or generating reports. The simulation below demonstrates the concept of writing to a file.</p>
+                    
+                    <h3 class="text-xl font-semibold">Writing to a Text File</h3>
+                    <div class="code-container">
+                        <div class="code-block p-4 rounded-t-lg fira-code text-sm">
+                            <pre><code class="language-python"># This is a simulation of writing to a file.
+# The output shows what the content of 'design_report.txt' would be.
+report_filename = 'design_report.txt'
+design_results = [
+    "Beam B1: Shear capacity OK.",
+    "Column C2: Requires redesign.",
+]
+
+# In a real script, this would create a file.
+# Here, we just print the intended content.
+print(f"--- Writing to {report_filename} ---")
+print("--- Structural Design Report ---")
+print("Date: 2025-07-23")
+print("")
+for result in design_results:
+    print(result)
+print("")
+print("--- End of Report ---")</code></pre>
+                        </div>
+                        <button class="run-button w-full p-2 rounded-b-lg font-semibold flex items-center justify-center">▶ Run Code</button>
+                        <div class="code-output fira-code p-4 rounded-b-lg mt-[-8px] hidden text-sm"></div>
+                    </div>
+                </section>
+
+                <section id="topic-6" class="content-section space-y-4 hidden">
+                    <h2 class="text-2xl font-bold text-[#005F73]">Topic 6: Introduction to Numerical Libraries</h2>
+                    <p>For serious numerical work, libraries like NumPy and Pandas are essential. NumPy provides powerful array objects for efficient computation, while Pandas offers DataFrames for manipulating tabular data.</p>
+
+                    <h3 class="text-xl font-semibold">NumPy (Numerical Python)</h3>
+                    <div class="code-container">
+                        <div class="code-block p-4 rounded-t-lg fira-code text-sm">
+                            <pre><code class="language-python"># In Python, you would 'import numpy as np'
+# Create a NumPy-like array from a list
+loads_kN = [100, 150, 200, 120]
+print(f"Original loads: {loads_kN}")
+
+# Perform an element-wise operation (vectorization)
+safety_factor = 1.25
+factored_loads = [load * safety_factor for load in loads_kN]
+print(f"Factored loads: {factored_loads}")
+
+# Sum of all loads
+total_load = sum(loads_kN)
+print(f"Total load: {total_load} kN")</code></pre>
+                        </div>
+                        <button class="run-button w-full p-2 rounded-b-lg font-semibold flex items-center justify-center">▶ Run Code</button>
+                        <div class="code-output fira-code p-4 rounded-b-lg mt-[-8px] hidden text-sm"></div>
+                    </div>
+
+                    <h4 class="text-lg font-semibold pt-4">Visualizing NumPy Data</h4>
+                    <p>A key advantage of using libraries like NumPy is that the data can be easily visualized. The chart below plots the `loads_kN` array from the example above, providing a clear visual comparison of the different beam loads.</p>
+                    <div class="chart-container bg-white/50 p-4 rounded-lg border border-gray-200">
+                        <canvas id="loadsChart"></canvas>
+                    </div>
+
+                    <h3 class="text-xl font-semibold pt-6">Pandas</h3>
+                    <p>Pandas is used for working with "dataframes," which are powerful, spreadsheet-like structures. You can easily read data from files (like CSVs), filter it, and perform calculations.</p>
+                    <div class="code-container">
+                        <div class="code-block p-4 rounded-t-lg fira-code text-sm">
+                            <pre><code class="language-python"># This simulates creating and filtering a Pandas DataFrame.
+# The data represents material properties for concrete mixes.
+concrete_mixes = {
+    'Mix_ID': ['C25', 'C30', 'C35'],
+    'Strength_MPa': [25, 30, 35],
+    'Density_kg_m3': [2400, 2450, 2500]
+}
+
+print("--- DataFrame of Concrete Mixes ---")
+# Print header
+print(f"{'Mix_ID':<10} {'Strength_MPa':<15} {'Density_kg_m3':<15}")
+# Print rows
+for i in range(len(concrete_mixes['Mix_ID'])):
+    mix_id = concrete_mixes['Mix_ID'][i]
+    strength = concrete_mixes['Strength_MPa'][i]
+    density = concrete_mixes['Density_kg_m3'][i]
+    print(f"{mix_id:<10} {strength:<15} {density:<15}")
+
+print("\n--- High-Strength Mixes (Strength > 25 MPa) ---")
+# Print header
+print(f"{'Mix_ID':<10} {'Strength_MPa':<15} {'Density_kg_m3':<15}")
+# Print filtered rows
+for i in range(len(concrete_mixes['Mix_ID'])):
+    if concrete_mixes['Strength_MPa'][i] > 25:
+        mix_id = concrete_mixes['Mix_ID'][i]
+        strength = concrete_mixes['Strength_MPa'][i]
+        density = concrete_mixes['Density_kg_m3'][i]
+        print(f"{mix_id:<10} {strength:<15} {density:<15}")</code></pre>
+                        </div>
+                        <button class="run-button w-full p-2 rounded-b-lg font-semibold flex items-center justify-center">▶ Run Code</button>
+                        <div class="code-output fira-code p-4 rounded-b-lg mt-[-8px] hidden text-sm"></div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const navigation = document.getElementById('navigation');
+            const contentSections = document.querySelectorAll('.content-section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            function showSection(hash) {
+                const targetId = hash.substring(1);
+                contentSections.forEach(section => {
+                    if (section.id === targetId) {
+                        section.classList.remove('hidden');
+                    } else {
+                        section.classList.add('hidden');
+                    }
+                });
+                navLinks.forEach(link => {
+                    if (link.getAttribute('href') === hash) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+            }
+
+            navigation.addEventListener('click', function (e) {
+                if (e.target.tagName === 'A') {
+                    e.preventDefault();
+                    const hash = e.target.getAttribute('href');
+                    history.pushState(null, null, hash);
+                    showSection(hash);
+                }
+            });
+
+            window.addEventListener('popstate', function() {
+                showSection(window.location.hash || '#overview');
+            });
+
+            showSection(window.location.hash || '#overview');
+
+            const runButtons = document.querySelectorAll('.run-button');
+            runButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const container = this.closest('.code-container');
+                    const codeElement = container.querySelector('code');
+                    const outputElement = container.querySelector('.code-output');
+                    
+                    const code = codeElement.innerText;
+                    const output = simulatePython(code);
+
+                    outputElement.innerHTML = `<pre>${output}</pre>`;
+                    outputElement.classList.remove('hidden');
+                });
+            });
+            
+            function simulatePython(code) {
+                let output = '';
+                const memory = {};
+
+                const lines = code.split('\n');
+                lines.forEach(line => {
+                    line = line.trim();
+                    if (line.startsWith('#') || line.length === 0) {
+                        return;
+                    }
+
+                    try {
+                        if (line.startsWith('print(')) {
+                            const contentMatch = line.match(/print\((.*)\)/);
+                            if (contentMatch) {
+                                let content = contentMatch[1];
+                                if (content.startsWith('f"')) {
+                                    content = content.substring(2, content.length - 1);
+                                    const varMatches = content.match(/{[^{}]+}/g) || [];
+                                    varMatches.forEach(match => {
+                                        const varName = match.substring(1, match.length - 1).split(':')[0].trim();
+                                        let value = memory[varName];
+                                        if (typeof value === 'object' && value !== null) {
+                                            value = JSON.stringify(value);
+                                        }
+                                        content = content.replace(match, value);
+                                    });
+                                    output += content + '\n';
+                                } else if (content.startsWith('"') || content.startsWith("'")) {
+                                     output += content.substring(1, content.length-1) + '\n';
+                                } else {
+                                    output += (memory[content] || 'undefined') + '\n';
+                                }
+                            }
+                        } else if (line.includes('=')) {
+                            const parts = line.split('=').map(p => p.trim());
+                            const varName = parts[0];
+                            let value = parts[1];
+                             if (value.startsWith('"') || value.startsWith("'")) {
+                                memory[varName] = value.substring(1, value.length - 1).split(' #')[0].trim();
+                            } else if (value.startsWith('[') && value.endsWith(']')) {
+                                memory[varName] = JSON.parse(value.replace(/'/g, '"'));
+                            } else if (value.startsWith('{') && value.endsWith('}')) {
+                                const sanitized = value.replace(/'/g, '"').replace(/([a-zA-Z0-9_]+):/g, '"$1":');
+                                memory[varName] = JSON.parse(sanitized);
+                            } else if (value.toLowerCase() === 'true') {
+                                memory[varName] = true;
+                            } else if (value.toLowerCase() === 'false') {
+                                memory[varName] = false;
+                            } else {
+                                memory[varName] = parseFloat(value.split(' #')[0].trim());
+                            }
+                        } else if (line.includes('for ')) {
+                             const forMatch = line.match(/for (.*) in (.*):/);
+                             if (forMatch) {
+                                const loopVar = forMatch[1];
+                                const iterableName = forMatch[2];
+                                const iterable = memory[iterableName];
+                                if(Array.isArray(iterable)) {
+                                    iterable.forEach(item => {
+                                        const innerLine = lines[lines.indexOf(line) + 1].trim();
+                                        let tempOutput = innerLine.match(/print\((.*)\)/)[1];
+                                        tempOutput = tempOutput.substring(2, tempOutput.length - 1);
+                                        const varMatches = tempOutput.match(/{[^{}]+}/g) || [];
+                                        varMatches.forEach(match => {
+                                            const varName = match.substring(1, match.length - 1).split(':')[0].trim();
+                                            let value = (varName === loopVar) ? item : (memory[varName] || item[varName]);
+                                             if (match.includes('.2f')) {
+                                                value = (value * (memory['safety_factor'] || 1)).toFixed(2);
+                                             }
+                                            tempOutput = tempOutput.replace(match, value);
+                                        });
+                                        output += tempOutput + '\n';
+                                    });
+                                }
+                             }
+                        }
+                    } catch (e) {
+                         output += `Error simulating line: ${line}\n`;
+                    }
+                });
+                return output.trim() || "Code executed (no print output).";
+            }
+
+            const ctx = document.getElementById('loadsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Beam 1', 'Beam 2', 'Beam 3', 'Beam 4'],
+                    datasets: [{
+                        label: 'Beam Loads (kN)',
+                        data: [100, 150, 200, 120],
+                        backgroundColor: [
+                            'rgba(0, 95, 115, 0.6)',
+                            'rgba(10, 147, 150, 0.6)',
+                            'rgba(148, 210, 189, 0.6)',
+                            'rgba(238, 155, 0, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(0, 95, 115, 1)',
+                            'rgba(10, 147, 150, 1)',
+                            'rgba(148, 210, 189, 1)',
+                            'rgba(238, 155, 0, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Load (kN)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Comparison of Beam Loads'
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
